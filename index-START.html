@@ -56,7 +56,8 @@
     <script>
       const addItems = document.querySelector(".add-items");
       const itemsList = document.querySelector(".plates");
-      const items = [];
+      //populates list on page load with local storage
+      const items = JSON.parse(localStorage.getItem("items")) || [];
 
       const newItem = (e) => {
         e.preventDefault();
@@ -72,6 +73,7 @@
         //to push in typed object
         items.push(typedObject);
         grabPopulateList(items, itemsList);
+        localStorage.setItem("items", JSON.stringify(items));
         formm.reset();
       };
       //populate list on as label
@@ -80,7 +82,7 @@
           .map((plate, i) => {
             return `
  <li>
-      <input type="checkbox" data-imdex=${i} id="item${i}" ${
+      <input type="checkbox" data-index="${i}" id="item${i}" ${
               plate.done ? "checked" : ""
             } />
       <label for="item${i}">${plate.typedText}</label>
@@ -88,8 +90,21 @@
           })
           .join("");
       };
-
+      // event delegation
+      const toggle = (e) => {
+        if (!e.target.matches("input")) return; // return the eventvpnly if it matches
+        const eventTarget = e.target;
+        console.log(eventTarget);
+        //to identify th clicked event
+        const index = eventTarget.dataset.index;
+        items[index].done = !items[index].done;
+        localStorage.setItem("items", JSON.stringify(items));
+        grabPopulateList(items, itemsList);
+      };
       addItems.addEventListener("submit", newItem);
+      itemsList.addEventListener("click", toggle);
+
+      grabPopulateList(items, itemsList);
     </script>
   </body>
 </html>
