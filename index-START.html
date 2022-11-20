@@ -79,8 +79,12 @@
         plateList.innerHTML = plates
           .map((plate, i) => {
             return `
-
-         `;
+ <li>
+      <input type="checkbox" data-imdex=${i} id="item${i}" ${
+              plate.done ? "checked" : ""
+            } />
+      <label for="item${i}">${plate.typedText}</label>
+      </li>`;
           })
           .join("");
       };
